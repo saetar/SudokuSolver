@@ -34,4 +34,8 @@ public class Piece {
 		possibilities.remove(p.getPoss());
 	}
 	
+	public String toString(){
+		return value + "";
+	}
+	
 }
