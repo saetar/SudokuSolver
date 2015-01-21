@@ -48,26 +48,48 @@ public class Board {
 		rows = new ArrayList<ArrayList<Piece>>();
 		squares = new ArrayList<ArrayList<Piece>>();
 		
-		Piece temp = new Piece();
+		//Init all inner arraylists of pieces.
 		for(int i = 0; i < 9; i++){
-			ArrayList<Piece> array = new ArrayList<Piece>();
-			for(int j = 0; j < 9; j++){
-				array.add(temp);
-			}
+			ArrayList<Piece> array = new ArrayList<Piece>(9);
 			columns.add(array);
+		}
+		
+		for(int i = 0; i < 9; i++){
+			ArrayList<Piece> array = new ArrayList<Piece>(9);
 			rows.add(array);
+		}
+		
+		for(int i = 0; i < 9; i++){
+			ArrayList<Piece> array = new ArrayList<Piece>(9);
 			squares.add(array);
+		}
+		
+		for(int y = 0; y < 9; y++){
+			for(int x = 0; x < 9; x++){
+				Piece temp = new Piece();
+				columns.get(x).add(y,temp);
+				rows.get(y).add(x,temp);
+				int squarefinder = (int)(3*Math.floor(y/3) + Math.floor(x/3));
+				int withinX = x%3;
+				int withinY = y%3;
+				int elementfinder = 3*withinY + withinX;
+				squares.get(squarefinder).add(elementfinder, temp);
+				//System.out.println(squares.get(squarefinder));
+			}
 		}
 		
 		//Sets values up and synchronizes all lists to match
 		for(int i = 0; i < posX.size(); i++){
-			columns.get(posX.get(i)).get(posY.get(i)).setValue(nums.get(i));
-			rows.get(posY.get(i)).get(posX.get(i)).setValue(nums.get(i));
-			int squarefinder = (int)(3*Math.floor(posY.get(i)/3) + Math.floor(posX.get(i)/3));
-			int withinX = posX.get(i)%3;
-			int withinY = posY.get(i)%3;
+			int x = posX.get(i);
+			int y = posY.get(i);
+			int num = nums.get(i);
+			columns.get(x).get(y).setValue(num);
+			/*rows.get(y).get(x).setValue(num);
+			int squarefinder = (int)(3*Math.floor(y/3) + Math.floor(x/3));
+			int withinX = x%3;
+			int withinY = y%3;
 			int elementfinder = (int)(3*Math.floor(withinY/3) + Math.floor(withinX/3));
-			squares.get(squarefinder).get(elementfinder).setValue(nums.get(i));
+			squares.get(squarefinder).get(elementfinder).setValue(num);*/
 		}
 		
 	}
@@ -98,17 +120,36 @@ public class Board {
 		int squarefinder = (int)(3*Math.floor(yCord/3) + Math.floor(xCord/3));
 		int withinX = xCord%3;
 		int withinY = yCord%3;
-		int elementfinder = (int)(3*Math.floor(withinY/3) + Math.floor(withinX/3));
+		int elementfinder = 3*withinY + withinX;
 		return squares.get(squarefinder).get(elementfinder);
 	}
 	
 	public void print(){
-		for(int i = 0; i < columns.size(); i++){
-			System.out.println(columns.get(i));
+		for(int x = 0; x < squares.size(); x++){
+			for(int y = 0; y < squares.get(0).size(); y++){
+				System.out.print("(" + getSquarePiece(x,y) + "," + getColumnPiece(x,y) + "," + getRowPiece(x,y) +  "),");
+			}System.out.print("\n");
 		}
+		
 	}
 	
 	public void changePiece(int x, int y, int val){
 		columns.get(x).get(y).setValue(val);
+	}
+	
+	public void solve(){
+		for(int i = 0; i < 9; i++){
+			eliminate(rows.get(i));
+			eliminate(columns.get(i));
+			eliminate(squares.get(i));
+		}
+		//If any piece's value is still 0, then try solving again.  
+		for(int i = 0; i < 9; i++){
+			for(int j = 0; j < 9; j++){
+				if(columns.get(i).get(j).value() == 0){
+					solve();
+				}
+			}
+		}
 	}
 }
