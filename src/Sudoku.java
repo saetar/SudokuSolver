@@ -87,7 +87,8 @@ public class Sudoku {
 		}
 		Board testBoard = new Board(xCord,yCord,vals);
 		testBoard.print();
-		testBoard.solve();
+		System.out.println(testBoard.getColumnPiece(0,2).getPoss());
+		//testBoard.solve();
 		//board.print();
 		//board.changePiece(0, 1, 1);
 		//board.print();

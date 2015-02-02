@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class Piece {
 	
-	int value;
-	ArrayList<Integer> possibilities;
+	private int value;
+	private ArrayList<Integer> possibilities;
 	
 	public Piece(){
 		value = 0;
@@ -23,15 +23,17 @@ public class Piece {
 	}
 	
 	public void eliminatePossibility(ArrayList<Integer> pos){
+		//System.out.println("Eliminating possibilities");
 		possibilities.remove(pos);
+		if(possibilities.size()==1){
+			//Setting value
+			value = possibilities.get(0);
+			System.out.println("Setting value: " + value );
+		}
 	}
 	
 	public int value(){
 		return value;
-	}
-	
-	public void syncPiece(Piece p){
-		possibilities.remove(p.getPoss());
 	}
 	
 	public String toString(){
